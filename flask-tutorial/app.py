@@ -7,12 +7,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Todo class
+# CLASS
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     complete = db.Column(db.Boolean)
 
+# ROUTES and HTTP METHODS
 @app.route("/add", methods=["POST"])
 def add():
     title = request.form.get("title")
@@ -21,6 +22,7 @@ def add():
     db.session.commit()
     return redirect(url_for("home"))
 
+# ROUTES
 @app.route("/update/<int:todo_id>")
 def update(todo_id):
     todo = Todo.query.filter_by(id=todo_id).first()
@@ -28,6 +30,7 @@ def update(todo_id):
     db.session.commit()
     return redirect(url_for("home"))
 
+# ROUTES
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
     todo = Todo.query.filter_by(id=todo_id).first()
@@ -35,9 +38,11 @@ def delete(todo_id):
     db.session.commit()
     return redirect(url_for("home"))
 
+# ROUTES
 @app.route('/')
 def home():
     todo_list = Todo.query.all()
+    # TEMPLATES
     return render_template("base.html", todo_list=todo_list)
 
 if __name__ == "__main__":
